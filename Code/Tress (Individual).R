@@ -64,13 +64,18 @@ results <- as.data.frame(
     Gini_outcome = NULL)
   )
 
+defaultW <- getOption("warn")
+options(warn = -1)
 
 # Estimation of Types ----
 trees <- c("2017", "R", "U", "N", "NO", "CO", "C", "CDMX", "S")
+depth <- c(9, 6, 5, 4, 6, 5, 4, 8, 4)
+j = 0
 for (a in trees){
+  j = j+1
   print(a)
   if (a == "2017"){
-    df_ <- df 
+    df_ <- df
   }
   else if (a == "R" | a == "U") {
     df_ <- df %>% filter(area == a)
@@ -81,7 +86,7 @@ for (a in trees){
   
   set.seed(123)
   tree             <- ctree(wealth_destination~.-ID,
-                            control = ctree_control(maxdepth = 7),
+                            control = ctree_control(maxdepth = depth[j]),
                             data = df_)
   
   df_$predicted    <- predict(tree,
@@ -164,8 +169,8 @@ for (a in trees){
       paste0("arbol", a, ".png"),
       path    = paste0("./Plots/", a),
       plot    = plt,
-      width   = 60,
-      height  = 20,
+      width   = 70,
+      height  = 30,
       units   = "cm",
       bg = "white"
     )

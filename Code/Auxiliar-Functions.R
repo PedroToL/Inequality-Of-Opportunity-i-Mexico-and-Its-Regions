@@ -1,23 +1,24 @@
 sacaQuitnil = function(x, distribucion = "bernstein") {
+  qi <- NULL
   if (distribucion == "bernstein") {
     for (j in 1:length(x)){
-      if (dfi$outcome_destino_cont[j] <= q_b[1]){
-        qi_b[j] <<- 1L
+      if (dft$outcome_destino_cont[j] <= q[1]){
+        qi[j] <- 1L
       }
-      else if (dfi$outcome_destino_cont[j] <= q_b[2] & dfi$outcome_destino_cont[j] > q_b[1]) {
-        qi_b[j] <<- 2L
+      else if (dft$outcome_destino_cont[j] <= q[2] & dft$outcome_destino_cont[j] > q[1]) {
+        qi[j] <- 2L
       }
-      else if (dfi$outcome_destino_cont[j] <= q_b[3] & dfi$outcome_destino_cont[j] > q_b[2]) {
-        qi_b[j] <<- 3L
+      else if (dft$outcome_destino_cont[j] <= q[3] & dft$outcome_destino_cont[j] > q[2]) {
+        qi[j] <- 3L
       }
-      else if (dfi$outcome_destino_cont[j] <= q_b[4] & dfi$outcome_destino_cont[j] > q_b[3]) {
-        qi_b[j] <<- 4L
+      else if (dft$outcome_destino_cont[j] <= q[4] & dft$outcome_destino_cont[j] > q[3]) {
+        qi[j] <- 4L
       }
-      else if (dfi$outcome_destino_cont[j] > q_b[4]) {
-        qi_b[j] <<- 5L
+      else if (dft$outcome_destino_cont[j] > q[4]) {
+        qi[j] <- 5L
       }
     }
-    return(qi_b)
+    return(qi)
   }
   
   else if (distribucion == "log-normal") {

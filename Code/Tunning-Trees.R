@@ -17,8 +17,8 @@ df <- read_dta("./Data/Emovi_2017.dta")
 
 df <- df %>% transmute(
   ID = folio, 
-  wealth_origin      = as.numeric(pcl_n_otcm_ori), 
-  wealth_destination = as.numeric(pcl_n_otcm_dest),
+  wealth_origin      = as.numeric(percentil_or), 
+  wealth_destination = as.numeric(percentil_des),
   region_origin      = recode_factor(as.double(region14),
                                      `1` = "N",
                                      `2` = "NO",
@@ -30,10 +30,10 @@ df <- df %>% transmute(
   area               = recode_factor(rural,
                                      `1` = "R",
                                      `0` = "U"),
-  sex                = recode_factor(as.double(sexo),
+  sex                = recode_factor(as.double(sexo_inf),
                                      `2` = "W",
                                      `1` = "M"),
-  skin_tone          = recode_factor(as.character(p151), 
+  skin_tone          = recode_factor(as.character(color_p), 
                                      "1" = "D",
                                      "2" = "D", 
                                      "3" = "D",
@@ -48,7 +48,7 @@ df <- df %>% transmute(
   ind_leng_parents   = recode_factor(as.double(hli), 
                                      `1` = "Y",
                                      `0` = "N")
-) %>% na.omit()
+)
 
 
 
