@@ -9,7 +9,7 @@ library(tidyverse)
 library(DescTools)
 library(dineq)
 
-source("D:/Universidad/Economia/THIB/Funciones.R")
+source("./Code/Auxiliar-functions.R")
 
 # Data ----
 df <- read_dta("./Data/Emovi_2017.dta")
@@ -58,7 +58,7 @@ variables <- colnames(df)
 trees <- c(.8, .5, 2148)
 regions <- c("2017", "R", "U", "N", "NO", "CO", "C", "CDMX", "S")
 depth <- c(9, 6, 6, 4, 5, 7, 7, 5, 6)
-for (t in "N") {
+for (t in regions) {
   print(t)
   
   if (t == "2017"){
@@ -92,7 +92,7 @@ for (t in "N") {
     
     set.seed(123)
     j = 0
-    for (n in 1:2) {
+    for (n in 1:100) {
       j = j+1
       print(n)
       
