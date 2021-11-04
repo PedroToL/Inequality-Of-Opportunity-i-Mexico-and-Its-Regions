@@ -69,7 +69,7 @@ options(warn = -1)
 
 # Estimation of Types ----
 trees <- c("2017", "R", "U", "N", "NO", "CO", "C", "CDMX", "S")
-depth <- c(9, 6, 5, 4, 6, 5, 4, 8, 4)
+depth <- c(9, 6, 6, 4, 5, 7, 7, 5, 6) 
 j = 0
 for (a in trees){
   j = j+1

@@ -9,15 +9,15 @@ library(tidyverse)
 library(DescTools)
 library(dineq)
 
-source("./Code/Auxiliar-Functions.R")
+source("D:/Universidad/Economia/THIB/Funciones.R")
 
 # Data ----
 df <- read_dta("./Data/Emovi_2017.dta")
 
 df <- df %>% transmute(
-  ID = folio, 
-  wealth_origin      = as.numeric(pcl_n_otcm_ori), 
-  wealth_destination = as.numeric(pcl_n_otcm_dest),
+  ID = 1:nrow(df), 
+  wealth_origin      = as.numeric(percentil_or), 
+  wealth_destination = as.numeric(percentil_des),
   region_origin      = recode_factor(as.double(region14),
                                      `1` = "N",
                                      `2` = "NO",
@@ -29,10 +29,10 @@ df <- df %>% transmute(
   area               = recode_factor(rural,
                                      `1` = "R",
                                      `0` = "U"),
-  sex                = recode_factor(as.double(sexo),
+  sex                = recode_factor(as.double(sexo_inf),
                                      `2` = "W",
                                      `1` = "M"),
-  skin_tone          = recode_factor(as.character(p151), 
+  skin_tone          = recode_factor(as.character(color_p), 
                                      "1" = "D",
                                      "2" = "D", 
                                      "3" = "D",
@@ -47,29 +47,28 @@ df <- df %>% transmute(
   ind_leng_parents   = recode_factor(as.double(hli), 
                                      `1` = "Y",
                                      `0` = "N")
-) %>% na.omit()
+)
 
 defaultW <- getOption("warn")
 options(warn = -1)
 
-variables <- c("wealth_origin", "wealth_destination", "region_origin", "parents_educ",
-               "rural", "sex")
+variables <- colnames(df)
 
 # Trees ----
-trees <- c(1, .8, .5, 0.1260073)
+trees <- c(.8, .5, 2148)
 regions <- c("2017", "R", "U", "N", "NO", "CO", "C", "CDMX", "S")
-depth <- c(9, 6, 5, 4, 6, 5, 4, 8, 4)
-for (i in regions) {
-  print(i)
+depth <- c(9, 6, 6, 4, 5, 7, 7, 5, 6)
+for (t in "N") {
+  print(t)
   
-  if (i == "2017"){
-    dfi <- df
+  if (t == "2017"){
+    df_t <- df
   }
-  else if (i == "R" | i == "U") {
-    dfi <- df %>% filter(area == i)
+  else if (t == "R" | t == "U") {
+    df_t <- df %>% filter(area == t)
   }
   else {
-    dfi <- df %>% filter(region_origin == i)
+    df_t <- df %>% filter(region_origin == t)
   }
 
   for (a in trees){
@@ -79,17 +78,9 @@ for (i in regions) {
     nodo_1  <- NULL
     G_XWE_B <- NULL
     G_XBE_B <- NULL
-    G_XWE_L <- NULL
-    G_XBE_L <- NULL
-    G_XWE_K <- NULL
-    G_XBE_K <- NULL
     M_XWE_B <- NULL
     M_XBE_B <- NULL
-    M_XWE_L <- NULL
-    M_XBE_L <- NULL
-    M_XWE_K <- NULL
-    M_XBE_K <- NULL
-    
+
     G_XWT        <- NULL
     M_XWT        <- NULL
     G_XBT        <- NULL
@@ -97,166 +88,26 @@ for (i in regions) {
     Gini_outcome <- NULL
     MLD_outcome  <- NULL
     
-    M_xwe_rural_b   <- NULL
-    G_xwe_rural_b   <- NULL
-    M_xwe_urbano_b  <- NULL
-    G_xwe_urbano_b  <- NULL
-    M_xwe_rural_l   <- NULL
-    G_xwe_rural_l   <- NULL
-    M_xwe_urbano_l  <- NULL
-    G_xwe_urbano_l  <- NULL
-    M_xwe_rural_k   <- NULL
-    G_xwe_rural_k   <- NULL
-    M_xwe_urbano_k  <- NULL
-    G_xwe_urbano_k  <- NULL
-    M_xwe_region1_b <- NULL
-    G_xwe_region1_b <- NULL
-    M_xwe_region2_b <- NULL
-    G_xwe_region2_b <- NULL
-    M_xwe_region3_b <- NULL
-    G_xwe_region3_b <- NULL
-    M_xwe_region4_b <- NULL
-    G_xwe_region4_b <- NULL
-    M_xwe_region5_b <- NULL
-    G_xwe_region5_b <- NULL
-    M_xwe_region6_b <- NULL
-    G_xwe_region6_b <- NULL
-    M_xwe_region1_l <- NULL
-    G_xwe_region1_l <- NULL
-    M_xwe_region2_l <- NULL
-    G_xwe_region2_l <- NULL
-    M_xwe_region3_l <- NULL
-    G_xwe_region3_l <- NULL
-    M_xwe_region4_l <- NULL
-    G_xwe_region4_l <- NULL
-    M_xwe_region5_l <- NULL
-    G_xwe_region5_l <- NULL
-    M_xwe_region6_l <- NULL
-    G_xwe_region6_l <- NULL
-    M_xwe_region1_k <- NULL
-    G_xwe_region1_k <- NULL
-    M_xwe_region2_k <- NULL
-    G_xwe_region2_k <- NULL
-    M_xwe_region3_k <- NULL
-    G_xwe_region3_k <- NULL
-    M_xwe_region4_k <- NULL
-    G_xwe_region4_k <- NULL
-    M_xwe_region5_k <- NULL
-    G_xwe_region5_k <- NULL
-    M_xwe_region6_k <- NULL
-    G_xwe_region6_k <- NULL
-    
-    
-    M_xbe_rural_b   <- NULL
-    G_xbe_rural_b   <- NULL
-    M_xbe_urbano_b  <- NULL
-    G_xbe_urbano_b  <- NULL
-    M_xbe_rural_l   <- NULL
-    G_xbe_rural_l   <- NULL
-    M_xbe_urbano_l  <- NULL
-    G_xbe_urbano_l  <- NULL
-    M_xbe_rural_k   <- NULL
-    G_xbe_rural_k   <- NULL
-    M_xbe_urbano_k  <- NULL
-    G_xbe_urbano_k  <- NULL
-    M_xbe_region1_b <- NULL
-    G_xbe_region1_b <- NULL
-    M_xbe_region2_b <- NULL
-    G_xbe_region2_b <- NULL
-    M_xbe_region3_b <- NULL
-    G_xbe_region3_b <- NULL
-    M_xbe_region4_b <- NULL
-    G_xbe_region4_b <- NULL
-    M_xbe_region5_b <- NULL
-    G_xbe_region5_b <- NULL
-    M_xbe_region6_b <- NULL
-    G_xbe_region6_b <- NULL
-    M_xbe_region1_l <- NULL
-    G_xbe_region1_l <- NULL
-    M_xbe_region2_l <- NULL
-    G_xbe_region2_l <- NULL
-    M_xbe_region3_l <- NULL
-    G_xbe_region3_l <- NULL
-    M_xbe_region4_l <- NULL
-    G_xbe_region4_l <- NULL
-    M_xbe_region5_l <- NULL
-    G_xbe_region5_l <- NULL
-    M_xbe_region6_l <- NULL
-    G_xbe_region6_l <- NULL
-    M_xbe_region1_k <- NULL
-    G_xbe_region1_k <- NULL
-    M_xbe_region2_k <- NULL
-    G_xbe_region2_k <- NULL
-    M_xbe_region3_k <- NULL
-    G_xbe_region3_k <- NULL
-    M_xbe_region4_k <- NULL
-    G_xbe_region4_k <- NULL
-    M_xbe_region5_k <- NULL
-    G_xbe_region5_k <- NULL
-    M_xbe_region6_k <- NULL
-    G_xbe_region6_k <- NULL
-    
-    M_xwt_rural   <- NULL
-    G_xwt_rural   <- NULL
-    M_xwt_urbano  <- NULL
-    G_xwt_urbano  <- NULL
-    M_xwt_region1 <- NULL
-    G_xwt_region1 <- NULL
-    M_xwt_region2 <- NULL
-    G_xwt_region2 <- NULL
-    M_xwt_region3 <- NULL
-    G_xwt_region3 <- NULL
-    M_xwt_region4 <- NULL
-    G_xwt_region4 <- NULL
-    M_xwt_region5 <- NULL
-    G_xwt_region5 <- NULL
-    M_xwt_region6 <- NULL
-    G_xwt_region6 <- NULL
-    
-    M_xbt_rural   <- NULL
-    G_xbt_rural   <- NULL
-    M_xbt_urbano  <- NULL
-    G_xbt_urbano  <- NULL
-    M_xbt_region1 <- NULL
-    G_xbt_region1 <- NULL
-    M_xbt_region2 <- NULL
-    G_xbt_region2 <- NULL
-    M_xbt_region3 <- NULL
-    G_xbt_region3 <- NULL
-    M_xbt_region4 <- NULL
-    G_xbt_region4 <- NULL
-    M_xbt_region5 <- NULL
-    G_xbt_region5 <- NULL
-    M_xbt_region6 <- NULL
-    G_xbt_region6 <- NULL
-    
-    M_outcome_rural   <- NULL
-    G_outcome_rural   <- NULL
-    M_outcome_urbano  <- NULL
-    G_outcome_urbano  <- NULL
-    M_outcome_region1 <- NULL
-    G_outcome_region1 <- NULL
-    M_outcome_region2 <- NULL
-    G_outcome_region2 <- NULL
-    M_outcome_region3 <- NULL
-    G_outcome_region3 <- NULL
-    M_outcome_region4 <- NULL
-    G_outcome_region4 <- NULL
-    M_outcome_region5 <- NULL
-    G_outcome_region5 <- NULL
-    M_outcome_region6 <- NULL
-    G_outcome_region6 <- NULL
+    R2    <- NULL
     
     set.seed(123)
     j = 0
-    for (n in 1:100) {
+    for (n in 1:2) {
       j = j+1
       print(n)
-      df_ <- dfi %>% sample_n(nrow(df)*a, replace = T)
+      
+      if (a < 1){
+        df_i <- df_t[sample(nrow(df_t), nrow(df_t)*a, replace = F),]
+      }
+      else {
+        df_i <- df_t[sample(nrow(df_t), a, replace = F),]
+      }
+      
+      df_ <- df_i
       
       # Estimation of Types
       tree             <- ctree(wealth_destination~.-ID,
-                                control = ctree_control(maxdepth = depth[j]),
+                                control = ctree_control(maxdepth = 5),
                                 data = df_)
       
       df_$predicted    <- predict(tree,
@@ -402,7 +253,7 @@ for (i in regions) {
                             by = "quintil_b")
       new_base <- new_base %>%
         mutate(
-          a_b            = pop_mean_outcome/qesf_mean_outcome,
+          a_b            = 1/qesf_mean_outcome,
           outcome_expost = outcome_destino_cont*a_b,
           XWE_bernstein  = outcome_expost,
           XBE_bernstein  = qesf_mean_outcome,
@@ -419,7 +270,7 @@ for (i in regions) {
       new_base <- merge(new_base, b_l,
                         by = "quintil_l") %>%
         mutate(
-          a_b_log          = pop_mean_outcome/qesf_mean_outcome,
+          a_b_log          = 1/qesf_mean_outcome,
           outcome_expost_l = outcome_destino_cont*a_b_log,
           XWE_Lognormal    = outcome_expost_l,
           XBE_Lognormal    = qesf_mean_outcome_l,
@@ -436,7 +287,7 @@ for (i in regions) {
       new_base <- merge(new_base, b_k,
                         by = "quintil_k") %>%
         mutate(
-          a_b_kernel       = pop_mean_outcome/qesf_mean_outcome,
+          a_b_kernel       = 1/qesf_mean_outcome,
           outcome_expost_k = outcome_destino_cont*a_b_kernel,
           XWE_kernel       = outcome_expost_k,
           XBE_kernel       = qesf_mean_outcome_k,
@@ -455,7 +306,7 @@ for (i in regions) {
                          by = "nodes") %>% 
         mutate(
           XBT  = type_mean_outcome,
-          a_bt = pop_mean_outcome/type_mean_outcome,
+          a_bt = 1/type_mean_outcome,
           XWT  = outcome_destino_cont*a_bt
         )
       
@@ -476,14 +327,6 @@ for (i in regions) {
       M_XWE_B[n] <- mld.wtd(XWE_bernstein)
       G_XBE_B[n] <- Gini(XBE_bernstein, na.rm = T)
       M_XBE_B[n] <- mld.wtd(XBE_bernstein)
-      G_XWE_L[n] <- Gini(XWE_Lognormal, na.rm = T)
-      M_XWE_L[n] <- mld.wtd(XWE_Lognormal)
-      G_XBE_L[n] <- Gini(XBE_Lognormal, na.rm = T)
-      M_XBE_L[n] <- mld.wtd(XBE_Lognormal)
-      G_XWE_K[n] <- Gini(XWE_Kernel, na.rm = T)
-      M_XWE_K[n] <- mld.wtd(XWE_Kernel)
-      M_XBE_K[n] <- Gini(XBE_Kernel, na.rm = T)
-      M_XBE_K[n] <- mld.wtd(XBE_Kernel)
       
       G_XWT[n] <- Gini(XWT, na.rm = T)
       M_XWT[n] <- mld.wtd(XWT)
@@ -492,21 +335,24 @@ for (i in regions) {
       
       Gini_outcome[n] <- Gini(outcome_continua, na.rm = T)
       MLD_outcome[n]  <- mld.wtd(outcome_continua)
+      
+      R2[n] <- var(new_base2$type_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
+
     }
     
     variables_c  <- as.data.frame(variables_c)
     results_Gini <- as.data.frame(cbind(nodos, nodo_1, 
-                                        G_XWE_B, G_XBE_B, G_XWE_L,
-                                        G_XBE_L, G_XWE_K, G_XBE_K,
-                                        G_XWT, G_XBT, Gini_outcome)
+                                        G_XWE_B, G_XBE_B, Gini_outcome)
                                   )
     results_MLD  <- as.data.frame(cbind(nodos, nodo_1,
-                                        M_XWE_B, M_XBE_B, M_XWE_L,
-                                        M_XBE_L, M_XWE_K, M_XBE_K,
-                                        M_XWT, M_XBT, MLD_outcome)
-                                  )
-    write.csv(results_Gini, paste0('./Results/Resultados_Gini_', a, i, '.csv'))
-    write.csv(results_MLD,  paste0('./Results/Resultados_MLD_', a, i, '.csv'))
-    write.csv(variables_c,  paste0('./Results/Variables_', a, i, '.csv'))
+                                        M_XWE_B, M_XBE_B, MLD_outcome)
+    )
+    results_R2   <- as.data.frame(R2)
+                                  
+    write.csv(results_R2, paste0('./Results/Resultados_R2_', a, '_', t, '.csv'))
+    write.csv(results_Gini, paste0('./Results/Resultados_Gini_', a, '_', t, '.csv'))
+    write.csv(results_MLD,  paste0('./Results/Resultados_MLD_', a, '_', t, '.csv'))
+    write.csv(variables_c,  paste0('./Results/Variables_', a, '_', t, '.csv'))
   }
 }
+
