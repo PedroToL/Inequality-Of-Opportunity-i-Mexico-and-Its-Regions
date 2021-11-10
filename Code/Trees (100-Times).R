@@ -342,10 +342,10 @@ for (t in regions) {
     
     variables_c  <- as.data.frame(variables_c)
     results_Gini <- as.data.frame(cbind(nodos, nodo_1, 
-                                        G_XWE_B, G_XBE_B, Gini_outcome)
+                                        G_XWE_B, G_XBE_B, G_XBT, G_XWT, Gini_outcome)
                                   )
     results_MLD  <- as.data.frame(cbind(nodos, nodo_1,
-                                        M_XWE_B, M_XBE_B, MLD_outcome)
+                                        M_XWE_B, M_XBE_B,  M_XBT,  M_XWT, MLD_outcome)
     )
     results_R2   <- as.data.frame(R2)
                                   
