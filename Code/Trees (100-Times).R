@@ -1,4 +1,4 @@
-setwd("D:/Investigación/JDS-Corrections")
+setwd("D:/InvestigaciÃ³n/JDS-Corrections")
 # Libraries & Functions----
 library(ggparty)
 library(mable)
@@ -107,7 +107,7 @@ for (t in regions) {
       
       # Estimation of Types
       tree             <- ctree(wealth_destination~.-ID,
-                                control = ctree_control(maxdepth = 5),
+                                control = ctree_control(maxdepth = depth[j]),
                                 data = df_)
       
       df_$predicted    <- predict(tree,
