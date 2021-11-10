@@ -501,7 +501,8 @@ for (a in trees){
                                    G_XWT, G_XBT, Gini_outcome,
                                    M_XWE_B, M_XBE_B, M_XWE_L,
                                    M_XBE_L, M_XWE_K, M_XBE_K,
-                                   M_XWT, M_XBT, MLD_outcome)
+                                   M_XWT, M_XBT, MLD_outcome,
+                                   R2, R2_expost)
   )
   results   <- rbind(results, results_a)
 }
