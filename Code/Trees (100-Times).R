@@ -88,7 +88,8 @@ for (t in regions) {
     Gini_outcome <- NULL
     MLD_outcome  <- NULL
     
-    R2    <- NULL
+    R2        <- NULL
+    R2_expost <- NULL
     
     set.seed(123)
     j = 0
@@ -337,6 +338,7 @@ for (t in regions) {
       MLD_outcome[n]  <- mld.wtd(outcome_continua)
       
       R2[n] <- var(new_base2$type_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
+      R2_expost[n] <- var(XWE_bernstein, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
 
     }
     
@@ -347,7 +349,7 @@ for (t in regions) {
     results_MLD  <- as.data.frame(cbind(nodos, nodo_1,
                                         M_XWE_B, M_XBE_B,  M_XBT,  M_XWT, MLD_outcome)
     )
-    results_R2   <- as.data.frame(R2)
+    results_R2   <- as.data.frame(cbind(R2, R2_expost))
                                   
     write.csv(results_R2, paste0('./Results/Resultados_R2_', a, '_', t, '.csv'))
     write.csv(results_Gini, paste0('./Results/Resultados_Gini_', a, '_', t, '.csv'))
