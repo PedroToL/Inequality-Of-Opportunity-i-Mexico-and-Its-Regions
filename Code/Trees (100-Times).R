@@ -357,4 +357,3 @@ for (t in regions) {
     write.csv(variables_c,  paste0('./Results/Variables_', a, '_', t, '.csv'))
   }
 }
-
