@@ -1,4 +1,4 @@
-setwd("D:/Investigación/JDS-Corrections") 
+setwd("D:/InvestigaciÃ³n/JDS-Corrections") 
 
 # Libraries & Functions----
 library(ggparty)
@@ -48,7 +48,7 @@ df <- df %>% transmute(
   ind_leng_parents   = recode_factor(as.double(hli), 
                                      `1` = "Y",
                                      `0` = "N")
-) %>% na.omit()
+) 
 
 results <- as.data.frame(
   cbind(
