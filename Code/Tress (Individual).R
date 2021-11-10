@@ -491,6 +491,9 @@ for (a in trees){
   
   MLD_outcome <- mld.wtd(outcome_continua)
   
+ R2[n] <- var(new_base2$type_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
+ R2_expost[n] <- var(XWE_bernstein, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
+  
   
   results_a <- as.data.frame(cbind(area = a,
                                    G_XWE_B, G_XBE_B, G_XWE_L,
@@ -504,20 +507,3 @@ for (a in trees){
 }
 
 write.csv(results, './Results/Results.csv')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
