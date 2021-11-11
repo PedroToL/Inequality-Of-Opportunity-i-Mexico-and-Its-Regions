@@ -492,7 +492,7 @@ for (a in trees){
   MLD_outcome <- mld.wtd(outcome_continua)
   
  R2[n] <- var(new_base2$type_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
- R2_expost[n] <-  var(new_base2$qesf_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
+ R2_expost[n] <- var(new_base2$qesf_mean_outcome, na.rm = T)/var(new_base2$outcome_destino_cont, na.rm = T)
   
   
   results_a <- as.data.frame(cbind(area = a,
